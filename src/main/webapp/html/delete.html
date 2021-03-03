@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>删除界面</title>
+    <script src="../js/axios.min.js"></script>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+<div id="delete">
+    <h2>输入您要删除的用户id</h2>
+    编号<input type="text" v-model="deletes.id"/><br>
+    <input type="button" @click="deleteAccountById()" value="提交" >
+    {{deletes.id}}
+</div>
+
+</body>
+<script>
+    new Vue({
+        el:"#delete",
+        data:{
+            deletes:{
+                id:""
+                },
+            respMsg:""
+
+
+        },
+        methods:{
+            deleteAccountById(){
+                let url ="/Account/deleteAccountById";
+                axios.post(url,this.deletes)
+                    .then(resp=>{
+
+                })
+            }
+
+
+        }
+    })
+</script>
+</html>

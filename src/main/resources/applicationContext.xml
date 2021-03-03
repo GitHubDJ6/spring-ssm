@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--spring核心配置文件-->
+    <!--开启spring组件扫描-->
+    <context:component-scan base-package="top.top.dj">
+        <!--指定不扫描的包-->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:exclude-filter>
+    </context:component-scan>
+
+    <!--解析property配置文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+
+    <!--配置数据源-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"></property>
+        <property name="jdbcUrl" value="${jdbc.url}"></property>
+        <property name="user" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+
+    <!--托管mybits的事务控制-->
+    <!--配置事务管理对象-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+        <!-- 开启AOP注解的支持 -->
+    <tx:annotation-driven/>
+    <!--注解方式配置aop-->
+    <aop:aspectj-autoproxy/>
+
+    <!-- Spring和mybatis整合后提供的类 -->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 指定数据源 -->
+        <property name="dataSource" ref="dataSource"></property>
+        <!-- 给包起别名 -->
+        <property name="typeAliasesPackage" value="top.top.dj.pojo"></property>
+        <!-- 指定Mybatis的配置文件 -->
+        <!--<property name="configLocation" value="classpath:mybatisConfig.xml"></property>-->
+    </bean>
+
+    <!-- 配置sql映射文件的位置 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描dao包,为dao包下所有的接口创建实现类,并将实现类存放到IOC容器中 -->
+        <property name="basePackage" value="top.top.dj.dao"></property>
+    </bean>
+</beans>

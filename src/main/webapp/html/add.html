@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <script src="../js/axios.min.js"></script>
+    <script src="../js/vue.js"></script>
+
+</head>
+<body>
+<h1>test</h1>
+<div id="addDiv">
+    <h1>添加用户</h1>
+    姓名<input type="text" v-model="account.name"/><br>
+    工资<input type="text" v-model="account.money"/><br>
+    <input type="button" @click="queryAllAccount()" value="提交" >
+    <h1>效果</h1>
+    <h2>{{respMsg}}</h2>
+</div>
+
+<script>
+    new Vue({
+        el:"#addDiv",
+        data:{
+            account:{
+                name:"",
+                money:""
+            },
+            respMsg:""
+        },
+        methods:{
+            queryAllAccount(){
+                let url="/Account/addAccount";
+                axios.post(url,this.account)
+                    .then(resp=>{
+                        this.respMsg=resp.data.msg;
+                })
+            }
+
+        }
+    })
+</script>
+
+</body>
+</html>
